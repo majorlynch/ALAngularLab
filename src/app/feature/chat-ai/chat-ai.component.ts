@@ -124,12 +124,17 @@ export class ChatAiComponent implements AfterViewChecked, DoCheck {
             this.cdRef.detectChanges();
           })
         )
-        .subscribe(
-          (res) => (
+        .subscribe({
+          next: (res) => {
             (chatResponse = this.chatService.formatGeminiContent(res)),
             this.ngZone.runOutsideAngular(() => console.log(res))
-          )
-        );
+          },
+          error: (err) => {
+          console.log('there is an error', err);
+        }
+      }
+          );
+
     } else if (this.selectedAI?.aiName == 'Deepseek') {
       const chatHistory: ChatHistory[] = this.displayMessages.map(
         ({ userType, messageDetail }) => ({
@@ -180,4 +185,8 @@ export class ChatAiComponent implements AfterViewChecked, DoCheck {
     this.chatPrompt = '';
     this.cdRef.detectChanges();
   }
+
+
+
 }
+
